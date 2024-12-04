@@ -1,0 +1,24 @@
+extend type Query {
+    tasks: [TarefaResponse!]
+    task(id: ID!): TarefaResponse
+}
+
+extend type Mutation {
+    createTask(tarefa: TarefaInput): TarefaResponse!
+    updateTask(id: ID!, title: String, description: String, status: String, deadline: String): TarefaResponse!
+    deleteTask(id: ID!): Boolean!
+}
+
+input TarefaInput {
+    title: String!
+    description: String
+    status: String!
+    deadLine: String
+}
+
+type TarefaResponse{
+    title: String!
+    description: String
+    status: String!
+    deadline: String
+}

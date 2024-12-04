@@ -1,0 +1,19 @@
+# ! indica que o campo sempre retornará um valor válido
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    tasks: [TarefaResponse!]
+}
+
+extend type Query {
+    user(id: ID!): User
+    users: [User!]!
+}
+
+extend type Mutation {
+    createUser(name: String!, email: String!, password: String!): User!
+    updateUser(id: ID!, name: String, email: String, password: String): User!
+    deleteUser(id: ID!): Boolean!
+}
