@@ -3,15 +3,11 @@ package com.fariasvision.TaskManager.controllers;
 import com.fariasvision.TaskManager.dtos.TarefaResponse;
 import com.fariasvision.TaskManager.dtos.TarefaInput;
 import com.fariasvision.TaskManager.entities.Tarefa;
-import com.fariasvision.TaskManager.services.CreateTarefaService;
-import com.fariasvision.TaskManager.services.GetAllTarefaService;
-import com.fariasvision.TaskManager.services.GetTarefaByIdService;
-import com.fariasvision.TaskManager.services.UpdateTarefaService;
+import com.fariasvision.TaskManager.services.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.Arguments;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -34,6 +30,9 @@ public class TarefaController {
 
     @Autowired
     UpdateTarefaService updateTarefaService;
+
+    @Autowired
+    DeleteTarefaService deleteTarefaService;
 
 //    Create
 
@@ -94,6 +93,11 @@ public class TarefaController {
                 .status(task.getStatus())
                 .deadLine(task.getDeadline())
                 .build();
+    }
+
+    @MutationMapping
+    public Boolean deleteTask(@Argument Long id){
+        return deleteTarefaService.deleteTask(id);
     }
 }
 
