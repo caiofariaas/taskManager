@@ -5,6 +5,7 @@ import com.fariasvision.TaskManager.dtos.TarefaInput;
 import com.fariasvision.TaskManager.entities.Tarefa;
 import com.fariasvision.TaskManager.services.CreateTarefaService;
 import com.fariasvision.TaskManager.services.GetAllTarefaService;
+import com.fariasvision.TaskManager.services.GetByIdTarefaService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +27,27 @@ public class TarefaController {
     @Autowired
     GetAllTarefaService getAllTarefaService;
 
+    @Autowired
+    GetByIdTarefaService getByIdTarefaService;
+
+//    Create
+
     @MutationMapping
     public TarefaResponse createTask(@Argument @Valid TarefaInput tarefa){
-        final var tarefaServiceTask = createTarefaService.createTask(tarefa);
+        final var task = createTarefaService.createTask(tarefa);
 
-        log.info("{}", tarefaServiceTask);
+        log.info("{}", task);
 
         return TarefaResponse.builder()
-                .id(tarefaServiceTask.getId())
-                .title(tarefaServiceTask.getTitle())
-                .description(tarefaServiceTask.getDescription())
-                .deadLine(tarefaServiceTask.getDeadline())
-                .status(tarefaServiceTask.getStatus())
+                .id(task.getId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .deadLine(task.getDeadline())
+                .status(task.getStatus())
                 .build();
     }
+
+//    Get all
 
     @QueryMapping
     public List<TarefaResponse> tasks (){
@@ -53,5 +61,20 @@ public class TarefaController {
                         .status(tarefa.getStatus())
                         .deadLine(tarefa.getDeadline())
                         .build()).collect(Collectors.toList());
+    }
+
+//    Get by id
+
+    @QueryMapping
+    public TarefaResponse task(@Argument Long id){
+        final var task = getByIdTarefaService.task(id);
+
+        return TarefaResponse.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .status(task.getStatus())
+                .deadLine(task.getDeadline())
+                .build();
     }
 }
