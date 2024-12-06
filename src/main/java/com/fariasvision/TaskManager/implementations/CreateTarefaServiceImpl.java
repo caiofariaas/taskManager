@@ -16,7 +16,8 @@ public class CreateTarefaServiceImpl  implements CreateTarefaService {
     @Override
     public Tarefa createTask(TarefaInput data) {
 
-        return tarefaRepository.save(Tarefa.builder()
+        return tarefaRepository.save(
+                Tarefa.builder()
                 .description(data.description())
                 .title(data.title())
                 .deadline(data.deadline())

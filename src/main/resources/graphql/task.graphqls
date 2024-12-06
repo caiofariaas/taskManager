@@ -17,6 +17,7 @@ input TarefaInput {
 }
 
 type TarefaResponse{
+    id: ID!
     title: String!
     description: String
     status: String!
