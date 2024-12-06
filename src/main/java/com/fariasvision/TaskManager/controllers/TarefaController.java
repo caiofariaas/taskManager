@@ -5,11 +5,13 @@ import com.fariasvision.TaskManager.dtos.TarefaInput;
 import com.fariasvision.TaskManager.entities.Tarefa;
 import com.fariasvision.TaskManager.services.CreateTarefaService;
 import com.fariasvision.TaskManager.services.GetAllTarefaService;
-import com.fariasvision.TaskManager.services.GetByIdTarefaService;
+import com.fariasvision.TaskManager.services.GetTarefaByIdService;
+import com.fariasvision.TaskManager.services.UpdateTarefaService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.Arguments;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -28,7 +30,10 @@ public class TarefaController {
     GetAllTarefaService getAllTarefaService;
 
     @Autowired
-    GetByIdTarefaService getByIdTarefaService;
+    GetTarefaByIdService getTarefaByIdService;
+
+    @Autowired
+    UpdateTarefaService updateTarefaService;
 
 //    Create
 
@@ -50,8 +55,8 @@ public class TarefaController {
 //    Get all
 
     @QueryMapping
-    public List<TarefaResponse> tasks (){
-        List<Tarefa> tarefas = getAllTarefaService.tasks();
+    public List<TarefaResponse> getAllTasks(){
+        List<Tarefa> tarefas = getAllTarefaService.getAllTasks();
 
         return tarefas.stream()
                 .map(tarefa -> TarefaResponse.builder()
@@ -66,8 +71,21 @@ public class TarefaController {
 //    Get by id
 
     @QueryMapping
-    public TarefaResponse task(@Argument Long id){
-        final var task = getByIdTarefaService.task(id);
+    public TarefaResponse getTaskById(@Argument Long id){
+        final var task = getTarefaByIdService.getTaskById(id);
+
+        return TarefaResponse.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .status(task.getStatus())
+                .deadLine(task.getDeadline())
+                .build();
+    }
+
+    @MutationMapping
+    public TarefaResponse updateTask(@Argument Long id, @Argument TarefaInput tarefa){
+        final var task = updateTarefaService.updateTask(id, tarefa);
 
         return TarefaResponse.builder()
                 .id(task.getId())
@@ -78,3 +96,4 @@ public class TarefaController {
                 .build();
     }
 }
+

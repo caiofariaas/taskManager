@@ -15,7 +15,7 @@ public class GetAllTarefaServiceImpl implements GetAllTarefaService {
     private TarefaRepository tarefaRepository;
 
     @Override
-    public List<Tarefa> tasks() {
+    public List<Tarefa> getAllTasks() {
         return tarefaRepository.findAll();
     }
 }

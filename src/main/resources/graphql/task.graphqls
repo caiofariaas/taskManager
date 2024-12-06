@@ -1,11 +1,11 @@
 extend type Query {
-    tasks: [TarefaResponse!]
-    task(id: ID!): TarefaResponse
+    getAllTasks: [TarefaResponse!]
+    getTaskById(id: ID!): TarefaResponse
 }
 
 extend type Mutation {
-    createTask(tarefa: TarefaInput): TarefaResponse!
-    updateTask(tarefa: TarefaInput): TarefaResponse!
+    createTask(tarefa: TarefaInput!): TarefaResponse!
+    updateTask(id: ID! ,tarefa: TarefaInput!): TarefaResponse!
     deleteTask(id: ID!): Boolean!
 }
 
