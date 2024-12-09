@@ -13,6 +13,8 @@ public class DeleteTarefaServiceImpl implements DeleteTarefaService {
 
     @Override
     public Boolean deleteTask(Long id) {
+        tarefaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada!"));
 
         tarefaRepository.deleteById(id);
 
