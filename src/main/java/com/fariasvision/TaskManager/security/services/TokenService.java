@@ -33,7 +33,7 @@ public class TokenService {
             return JWT
                     .create()
                     .withIssuer("remedios_api")
-                    .withSubject(usuario.getLogin())
+                    .withSubject(usuario.getEmail())
                     .withClaim("id", usuario.getId())
                     .withExpiresAt(Expirar())
                     .sign(Algorithm.HMAC256(secret));

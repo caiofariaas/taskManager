@@ -1,6 +1,8 @@
 package com.fariasvision.TaskManager.security;
 
 
+import com.fariasvision.TaskManager.repositories.UsuarioRepository;
+import com.fariasvision.TaskManager.security.services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +22,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuarioRepository usuarioRepository;
 
     /*
 
@@ -39,7 +41,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             // Aqui nós recuperamos o Usuário utilizando a função getByLogin, que espera uma string sendo o Login/Username deste usuário!
 
-            var usuario = usuarioService.getByLogin(tokenService.getSubject(getToken(request)));
+            var usuario = usuarioRepository.findByEmail(tokenService.getSubject(getToken(request)));
 
             /*
 

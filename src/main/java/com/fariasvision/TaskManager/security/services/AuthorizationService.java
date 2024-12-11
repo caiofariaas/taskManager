@@ -1,7 +1,10 @@
 package com.fariasvision.TaskManager.security.services;
 
 
+import com.fariasvision.TaskManager.dtos.UsuarioInput;
+import com.fariasvision.TaskManager.dtos.UsuarioResponse;
 import com.fariasvision.TaskManager.entities.Usuario;
+import com.fariasvision.TaskManager.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class AuthorizationService {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private AuthenticationService authService;
@@ -19,14 +22,22 @@ public class AuthorizationService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public OutUsuarioDTO register(InUsuarioDTO dados){
+    public UsuarioResponse register(UsuarioInput dados){
 
-        Usuario usuario = new Usuario(dados, passwordEncoder.encode(dados.senha()));
+        Usuario usuario = Usuario.builder()
+                        .name(dados.name())
+                        .password(passwordEncoder.encode(dados.password()))
+                        .email(dados.email())
+                        .build();
 
         System.out.println("ROLES - " + usuario.getAuthorities());
 
-        usuarioService.save(usuario);
+        usuarioRepository.save(usuario);
 
-        return new OutUsuarioDTO(usuario);
+        return UsuarioResponse.builder()
+                .id(usuario.getId())
+                .name(usuario.getName())
+                .email(usuario.getEmail())
+                .build();
     }
 }

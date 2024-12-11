@@ -1,5 +1,7 @@
 package com.fariasvision.TaskManager.security.services;
 
+import com.fariasvision.TaskManager.dtos.AuthenticationInput;
+import com.fariasvision.TaskManager.dtos.TokenResponse;
 import com.fariasvision.TaskManager.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +22,10 @@ public class AuthenticationService {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    public TokenJwtDTO loginAndCreateToken(AuthenticationDTO dados){
+    public TokenResponse loginAndCreateToken(AuthenticationInput dados){
 
-        String tokenJWT = tokenService.gerarToken((Usuario) manager.authenticate(new UsernamePasswordAuthenticationToken(dados.login(), dados.senha())).getPrincipal());
+        String tokenJWT = tokenService.gerarToken((Usuario) manager.authenticate(new UsernamePasswordAuthenticationToken(dados.email(), dados.password())).getPrincipal());
 
-        return new TokenJwtDTO(tokenJWT);
+        return new TokenResponse(tokenJWT);
     }
 }

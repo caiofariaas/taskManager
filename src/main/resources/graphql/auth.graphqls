@@ -1,0 +1,12 @@
+extend type Mutation {
+    loginAndCreateToken(emailAndPassword: AuthenticationInput!): TokenResponse!
+}
+
+input AuthenticationInput {
+    email: String!
+    password: String!
+}
+
+type TokenResponse {
+    token: String!
+}
