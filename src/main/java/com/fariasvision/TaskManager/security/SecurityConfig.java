@@ -32,19 +32,9 @@ public class SecurityConfig{
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/graphql/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/graphiql/**").permitAll();
 
-                    req.requestMatchers( HttpMethod.POST, "/remedios/**").hasAnyRole("ADMIN", "MANAGER");
-                    req.requestMatchers( HttpMethod.PUT,"/remedios", "/remedios/**").hasAnyRole("ADMIN", "MANAGER");
-                    req.requestMatchers( HttpMethod.PATCH,"/remedios", "/remedios/**").hasAnyRole("ADMIN", "MANAGER");
-                    req.requestMatchers( HttpMethod.DELETE,"/remedios", "/remedios/**").hasAnyRole("ADMIN", "MANAGER");
-
-                    req.requestMatchers(HttpMethod.GET, "/remedios", "/remedios/**").hasAnyRole("ADMIN", "USER", "MANAGER");
-
-                    req.requestMatchers("/usuarios/privilege/**", "/usuarios/privilege").hasAnyRole("ADMIN");
-                    req.requestMatchers("/usuarios", "/usuarios/**").hasAnyRole("ADMIN", "MANAGER");
-
-                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .build();
