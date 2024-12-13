@@ -2,7 +2,6 @@ package com.fariasvision.TaskManager.security.services;
 
 
 import com.fariasvision.TaskManager.dtos.UsuarioInput;
-import com.fariasvision.TaskManager.dtos.UsuarioResponse;
 import com.fariasvision.TaskManager.entities.Usuario;
 import com.fariasvision.TaskManager.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class AuthorizationService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public UsuarioResponse register(UsuarioInput dados){
+    public Usuario register(UsuarioInput dados){
 
         Usuario usuario = Usuario.builder()
                         .name(dados.name())
@@ -34,10 +33,6 @@ public class AuthorizationService {
 
         usuarioRepository.save(usuario);
 
-        return UsuarioResponse.builder()
-                .id(usuario.getId())
-                .name(usuario.getName())
-                .email(usuario.getEmail())
-                .build();
+        return usuario;
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService {
 
-
     @Autowired
     private TokenService tokenService;
 
@@ -23,7 +22,6 @@ public class AuthenticationService {
     private UserDetailsServiceImpl userDetailsService;
 
     public TokenResponse loginAndCreateToken(AuthenticationInput dados){
-
         String tokenJWT = tokenService.gerarToken((Usuario) manager.authenticate(new UsernamePasswordAuthenticationToken(dados.email(), dados.password())).getPrincipal());
 
         return new TokenResponse(tokenJWT);

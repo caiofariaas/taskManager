@@ -4,7 +4,6 @@ extend type Query {
 }
 
 extend type Mutation {
-    createUser(usuario: UsuarioInput!): UsuarioResponse!
     updateUser(id: ID!, name: String, email: String, password: String): UsuarioResponse!
     deleteUser(id: ID!): Boolean!
 }
@@ -21,4 +20,3 @@ type UsuarioResponse {
     email: String!
     tarefas: [TarefaResponse!]
 }
-

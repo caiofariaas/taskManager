@@ -1,5 +1,6 @@
 extend type Mutation {
-    loginAndCreateToken(emailAndPassword: AuthenticationInput!): TokenResponse!
+    login(authenticationInput: AuthenticationInput!): TokenResponse!
+    register(usuario: UsuarioInput!):UsuarioResponse!
 }
 
 input AuthenticationInput {
