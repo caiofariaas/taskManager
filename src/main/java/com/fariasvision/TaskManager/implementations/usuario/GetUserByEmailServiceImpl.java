@@ -3,6 +3,7 @@ package com.fariasvision.TaskManager.implementations.usuario;
 import com.fariasvision.TaskManager.dtos.TarefaResponse;
 import com.fariasvision.TaskManager.dtos.UsuarioResponse;
 import com.fariasvision.TaskManager.entities.Usuario;
+import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import com.fariasvision.TaskManager.repositories.UsuarioRepository;
 import com.fariasvision.TaskManager.services.usuario.GetUserByEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class GetUserByEmailServiceImpl implements GetUserByEmailService {
     public UsuarioResponse getUserByEmail(String email) {
 
         Usuario usuario = (Usuario) usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
         return UsuarioResponse.builder()
                 .id(usuario.getId())

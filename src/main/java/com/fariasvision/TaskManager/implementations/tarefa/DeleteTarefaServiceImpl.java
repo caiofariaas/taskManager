@@ -1,5 +1,6 @@
-package com.fariasvision.TaskManager.implementations;
+package com.fariasvision.TaskManager.implementations.tarefa;
 
+import com.fariasvision.TaskManager.infra.exceptions.tarefa.TaskNotFoundException;
 import com.fariasvision.TaskManager.repositories.TarefaRepository;
 import com.fariasvision.TaskManager.services.DeleteTarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class DeleteTarefaServiceImpl implements DeleteTarefaService {
     @Override
     public Boolean deleteTask(Long id) {
         tarefaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada!"));
+                .orElseThrow(() -> new TaskNotFoundException("Tarefa não encontrada!"));
 
         tarefaRepository.deleteById(id);
 

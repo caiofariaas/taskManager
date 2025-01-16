@@ -1,7 +1,8 @@
-package com.fariasvision.TaskManager.implementations;
+package com.fariasvision.TaskManager.implementations.tarefa;
 
 import com.fariasvision.TaskManager.dtos.TarefaInput;
 import com.fariasvision.TaskManager.entities.Tarefa;
+import com.fariasvision.TaskManager.infra.exceptions.tarefa.TaskNotFoundException;
 import com.fariasvision.TaskManager.repositories.TarefaRepository;
 import com.fariasvision.TaskManager.services.UpdateTarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class UpdateTarefaServiceImpl implements UpdateTarefaService {
     @Override
     public Tarefa updateTask(Long id, TarefaInput tarefa) {
         Tarefa task = tarefaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada!"));
+                .orElseThrow(() -> new TaskNotFoundException("Tarefa não encontrada!"));
 
         if(tarefa.title() != null){
             task.setTitle(tarefa.title());

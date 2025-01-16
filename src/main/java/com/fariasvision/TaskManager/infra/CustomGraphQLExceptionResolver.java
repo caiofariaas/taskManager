@@ -38,7 +38,6 @@ public class CustomGraphQLExceptionResolver implements DataFetcherExceptionResol
                             .build()
             )));
         }
-
         return Mono.empty();
     }
 }

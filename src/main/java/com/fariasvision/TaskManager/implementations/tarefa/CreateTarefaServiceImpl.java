@@ -1,4 +1,4 @@
-package com.fariasvision.TaskManager.implementations;
+package com.fariasvision.TaskManager.implementations.tarefa;
 
 import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import com.fariasvision.TaskManager.dtos.TarefaInput;

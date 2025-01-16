@@ -1,7 +1,6 @@
-package com.fariasvision.TaskManager.implementations;
+package com.fariasvision.TaskManager.implementations.tarefa;
 
 import com.fariasvision.TaskManager.dtos.TarefaResponse;
-import com.fariasvision.TaskManager.entities.Tarefa;
 import com.fariasvision.TaskManager.repositories.TarefaRepository;
 import com.fariasvision.TaskManager.services.GetAllTarefaService;
 import org.springframework.beans.factory.annotation.Autowired;
