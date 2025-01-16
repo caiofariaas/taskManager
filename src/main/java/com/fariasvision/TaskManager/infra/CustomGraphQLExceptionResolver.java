@@ -1,6 +1,7 @@
 package com.fariasvision.TaskManager.infra;
 
 import com.fariasvision.TaskManager.infra.exceptions.tarefa.TaskNotFoundException;
+import com.fariasvision.TaskManager.infra.exceptions.usuario.UserAlreadyExistsException;
 import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import graphql.ErrorType;
 import graphql.GraphQLError;
@@ -34,6 +35,16 @@ public class CustomGraphQLExceptionResolver implements DataFetcherExceptionResol
                     GraphqlErrorBuilder.newError(environment)
                             .message(ex.getMessage())
                             .errorType(ErrorType.DataFetchingException)
+                            .extensions(Map.of("code", ex.getCode()))
+                            .build()
+            )));
+        }
+
+        if (exception instanceof UserAlreadyExistsException ex){
+            return Mono.just((List.of(
+                    GraphqlErrorBuilder.newError(environment)
+                            .message(ex.getMessage())
+                            .errorType(org.springframework.graphql.execution.ErrorType.UNAUTHORIZED)
                             .extensions(Map.of("code", ex.getCode()))
                             .build()
             )));

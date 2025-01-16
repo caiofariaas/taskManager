@@ -3,6 +3,7 @@ package com.fariasvision.TaskManager.security.services;
 
 import com.fariasvision.TaskManager.dtos.UsuarioInput;
 import com.fariasvision.TaskManager.entities.Usuario;
+import com.fariasvision.TaskManager.infra.exceptions.usuario.UserAlreadyExistsException;
 import com.fariasvision.TaskManager.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +26,7 @@ public class AuthorizationService {
 
         usuarioRepository.findByEmail(dados.email())
                 .ifPresent(user -> {
-                    throw new RuntimeException("Usuário com o email " + dados.email() + " já está registrado!");
+                    throw new UserAlreadyExistsException("Usuário com o email " + dados.email() + " já está registrado!");
                 });
 
         Usuario usuario = Usuario.builder()
