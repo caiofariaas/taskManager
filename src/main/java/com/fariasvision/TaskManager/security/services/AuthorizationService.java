@@ -23,6 +23,11 @@ public class AuthorizationService {
 
     public Usuario register(UsuarioInput dados){
 
+        usuarioRepository.findByEmail(dados.email())
+                .ifPresent(user -> {
+                    throw new RuntimeException("Usuário com o email " + dados.email() + " já está registrado!");
+                });
+
         Usuario usuario = Usuario.builder()
                         .name(dados.name())
                         .password(passwordEncoder.encode(dados.password()))

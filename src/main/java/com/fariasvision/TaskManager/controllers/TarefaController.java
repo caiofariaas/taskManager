@@ -55,16 +55,7 @@ public class TarefaController {
 
     @QueryMapping
     public List<TarefaResponse> getAllTasks(){
-        List<Tarefa> tarefas = getAllTarefaService.getAllTasks();
-
-        return tarefas.stream()
-                .map(tarefa -> TarefaResponse.builder()
-                        .id(tarefa.getId())
-                        .title(tarefa.getTitle())
-                        .description(tarefa.getDescription())
-                        .status(tarefa.getStatus())
-                        .deadLine(tarefa.getDeadline())
-                        .build()).collect(Collectors.toList());
+        return getAllTarefaService.getAllTasks();
     }
 
 //    Get by id

@@ -1,6 +1,6 @@
 extend type Query {
-    user(id: ID!): UsuarioResponse
-    users: [UsuarioResponse!]!
+    getUserByEmail(email: String!): UsuarioResponse
+    getAllUsers: [UsuarioResponse!]!
 }
 
 extend type Mutation {
