@@ -1,5 +1,6 @@
 package com.fariasvision.TaskManager.implementations;
 
+import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import com.fariasvision.TaskManager.dtos.TarefaInput;
 import com.fariasvision.TaskManager.entities.Tarefa;
 import com.fariasvision.TaskManager.entities.Usuario;
@@ -21,7 +22,7 @@ public class CreateTarefaServiceImpl  implements CreateTarefaService {
     public Tarefa createTask(TarefaInput data) {
 
         Usuario usuario = (Usuario) usuarioRepository.findByEmail(data.userEmail())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
 
         Tarefa tarefa = Tarefa.builder()
                 .description(data.description())
