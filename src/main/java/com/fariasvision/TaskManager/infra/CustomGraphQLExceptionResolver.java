@@ -1,6 +1,8 @@
 package com.fariasvision.TaskManager.infra;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.fariasvision.TaskManager.infra.exceptions.tarefa.TaskNotFoundException;
+import com.fariasvision.TaskManager.infra.exceptions.usuario.InvalidTokenException;
 import com.fariasvision.TaskManager.infra.exceptions.usuario.UserAlreadyExistsException;
 import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import graphql.ErrorType;
@@ -20,6 +22,9 @@ public class CustomGraphQLExceptionResolver implements DataFetcherExceptionResol
 
     @Override
     public @NonNull Mono<List<GraphQLError>> resolveException(@NonNull Throwable exception, @NonNull DataFetchingEnvironment environment) {
+
+        System.out.println("CAPTURADA: " + exception.getClass().getName());
+
         if (exception instanceof UserNotFoundException ex) {
             return Mono.just(List.of(
                     GraphqlErrorBuilder.newError(environment)
@@ -45,6 +50,17 @@ public class CustomGraphQLExceptionResolver implements DataFetcherExceptionResol
                     GraphqlErrorBuilder.newError(environment)
                             .message(ex.getMessage())
                             .errorType(org.springframework.graphql.execution.ErrorType.UNAUTHORIZED)
+                            .extensions(Map.of("code", ex.getCode()))
+                            .build()
+            )));
+        }
+
+        if (exception instanceof InvalidTokenException ex){
+            System.out.println("EXCEÇÂO: " + ex.getClass().getName());
+            return Mono.just((List.of(
+                    GraphqlErrorBuilder.newError(environment)
+                            .message(ex.getMessage())
+                            .errorType(org.springframework.graphql.execution.ErrorType.FORBIDDEN)
                             .extensions(Map.of("code", ex.getCode()))
                             .build()
             )));

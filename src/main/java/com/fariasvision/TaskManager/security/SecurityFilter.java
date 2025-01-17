@@ -2,6 +2,7 @@ package com.fariasvision.TaskManager.security;
 
 
 import com.fariasvision.TaskManager.entities.Usuario;
+import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import com.fariasvision.TaskManager.repositories.UsuarioRepository;
 import com.fariasvision.TaskManager.security.services.TokenService;
 import jakarta.servlet.FilterChain;
@@ -42,7 +43,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             // Aqui nós recuperamos o Usuário utilizando a função getByLogin, que espera uma string sendo o Login/Username deste usuário!
 
-            Usuario usuario = (Usuario) usuarioRepository.findByEmail(tokenService.getSubject(getToken(request))).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+            Usuario usuario = (Usuario) usuarioRepository.findByEmail(tokenService.getSubject(getToken(request))).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
 
             /*
 

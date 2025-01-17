@@ -1,5 +1,6 @@
 package com.fariasvision.TaskManager.security.services;
 
+import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import com.fariasvision.TaskManager.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +38,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return service.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        return service.findByEmail(email).orElseThrow(() -> new UserNotFoundException(  "Usuário não encontrado!"));
     }
 }

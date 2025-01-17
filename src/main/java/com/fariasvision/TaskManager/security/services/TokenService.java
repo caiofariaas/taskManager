@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fariasvision.TaskManager.entities.Usuario;
+import com.fariasvision.TaskManager.infra.exceptions.usuario.InvalidTokenException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class TokenService {
         try {
             return JWT
                     .create()
-                    .withIssuer("remedios_api")
+                    .withIssuer("task_api")
                     .withSubject(usuario.getEmail())
                     .withClaim("id", usuario.getId())
                     .withExpiresAt(Expirar())
@@ -44,19 +45,18 @@ public class TokenService {
         }
     }
 
-    public String getSubject(String tokenJWT) throws JWTCreationException, JWTDecodeException{
+    public String getSubject(String tokenJWT) throws JWTCreationException, JWTDecodeException, InvalidTokenException{
 
         try {
             return JWT
                     .require(Algorithm.HMAC256(secret))
-                    .withIssuer("remedios_api")
+                    .withIssuer("task_api")
                     .build()
                     .verify(tokenJWT)
                     .getSubject();
         }
         catch (JWTDecodeException e){
-            logger.error("Token Inválido!");
-            throw new RuntimeException("Token Inválido!");
+            throw new InvalidTokenException("Token Inválido!");
         }
         catch (TokenExpiredException e ){
             throw new TokenExpiredException("Token Expirado!", e.getExpiredOn());

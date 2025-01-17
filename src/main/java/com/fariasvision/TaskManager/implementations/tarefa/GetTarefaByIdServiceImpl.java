@@ -15,6 +15,7 @@ public class GetTarefaByIdServiceImpl implements GetTarefaByIdService {
 
     @Override
     public Tarefa getTaskById(Long id) {
+
         return tarefaRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Tarefa não encontrada!"));
     }

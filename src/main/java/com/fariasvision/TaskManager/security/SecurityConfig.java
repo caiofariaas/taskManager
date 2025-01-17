@@ -32,9 +32,8 @@ public class SecurityConfig{
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/graphql/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/graphiql/**").permitAll();
-
+                    req.requestMatchers(HttpMethod.POST, "/graphql/**").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .build();
