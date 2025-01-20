@@ -22,8 +22,6 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    // Indica que estamos utilizando o valor definido em 'properties'
-
     @Value("${api.security.token.secret}")
     private String secret;
 
@@ -63,9 +61,6 @@ public class TokenService {
             throw new TokenExpiredException("Token Expirado!", e.getExpiredOn());
         }
     }
-
-    // Função que retorna a hora atual mais 2 horas
-    // usada para determinar ciclo de vida do Token
 
     private Instant Expirar() {
         return LocalDateTime.now()

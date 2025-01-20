@@ -1,5 +1,6 @@
 package com.fariasvision.TaskManager.security;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fariasvision.TaskManager.entities.Usuario;
 import com.fariasvision.TaskManager.infra.exceptions.usuario.InvalidTokenException;
 import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -35,24 +35,22 @@ public class SecurityFilter extends OncePerRequestFilter {
             String token = getToken(request);
 
             if (token != null) {
-                // Verifica o assunto (usuário) associado ao token
                 String subject = tokenService.getSubject(token);
 
-                // Busca o usuário no repositório
                 Usuario usuario = (Usuario) usuarioRepository.findByEmail(subject)
                         .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
 
-                // Define a autenticação no contexto de segurança
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities())
                 );
             }
 
-            // Continua a cadeia de filtros
             filterChain.doFilter(request, response);
 
         } catch (InvalidTokenException e) {
             handleException(response, HttpServletResponse.SC_UNAUTHORIZED, "Token inválido", "INVALID_TOKEN", e);
+        } catch (TokenExpiredException e){
+            handleException(response, HttpServletResponse.SC_UNAUTHORIZED, "Token Expirado", "EXPIRED_TOKEN", e);
         } catch (UserNotFoundException e) {
             handleException(response, HttpServletResponse.SC_NOT_FOUND, "Usuário não encontrado", "USER_NOT_FOUND", e);
         }
