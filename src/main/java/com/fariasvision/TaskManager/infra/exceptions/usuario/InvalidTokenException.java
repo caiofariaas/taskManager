@@ -7,7 +7,7 @@ public class InvalidTokenException extends RuntimeException {
 
     private final String code;
 
-    public InvalidTokenException(String message) {
+    public InvalidTokenException(String message, Exception e) {
         super(message);
         this.code = "INVALID_TOKEN";
     }

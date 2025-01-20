@@ -1,7 +1,7 @@
 package com.fariasvision.TaskManager.security;
 
-
 import com.fariasvision.TaskManager.entities.Usuario;
+import com.fariasvision.TaskManager.infra.exceptions.usuario.InvalidTokenException;
 import com.fariasvision.TaskManager.infra.exceptions.usuario.UserNotFoundException;
 import com.fariasvision.TaskManager.repositories.UsuarioRepository;
 import com.fariasvision.TaskManager.security.services.TokenService;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -26,64 +27,64 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    /*
-
-     recebe um objeto HttpServletRequest que representa a solicitação HTTP
-     um objeto HttpServletResponse que representa a resposta HTTP
-     e um objeto FilterChain que permite que o filtro atual passe o controle para o próximo filtro na cadeia.
-
-    */
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        // Aqui nós chamamos a função para verificar se o Token existe no Header desta requisição
+        try {
+            String token = getToken(request);
 
-        if(getToken(request) != null){
+            if (token != null) {
+                // Verifica o assunto (usuário) associado ao token
+                String subject = tokenService.getSubject(token);
 
-            // Aqui nós recuperamos o Usuário utilizando a função getByLogin, que espera uma string sendo o Login/Username deste usuário!
+                // Busca o usuário no repositório
+                Usuario usuario = (Usuario) usuarioRepository.findByEmail(subject)
+                        .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
 
-            Usuario usuario = (Usuario) usuarioRepository.findByEmail(tokenService.getSubject(getToken(request))).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+                // Define a autenticação no contexto de segurança
+                SecurityContextHolder.getContext().setAuthentication(
+                        new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities())
+                );
+            }
 
-            /*
+            // Continua a cadeia de filtros
+            filterChain.doFilter(request, response);
 
-             O SecurityContextHolder é uma classe que fornece acesso ao contexto de segurança da aplicação.
-             Aqui, está sendo usado para definir a autenticação do usuário.
-             O método setAuthentication é usado para definir a autenticação.
-
-            */
-
-            /*
-
-            Está sendo criado um novo UsernamePasswordAuthenticationToken
-            com informações do usuário e suas autorizações (ou seja, papéis/roles),
-            e isso é armazenado no contexto de segurança da aplicação.
-
-             */
-
-            SecurityContextHolder
-                    .getContext()
-                    .setAuthentication(new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities()));
+        } catch (InvalidTokenException e) {
+            handleException(response, HttpServletResponse.SC_UNAUTHORIZED, "Token inválido", "INVALID_TOKEN", e);
+        } catch (UserNotFoundException e) {
+            handleException(response, HttpServletResponse.SC_NOT_FOUND, "Usuário não encontrado", "USER_NOT_FOUND", e);
         }
-
-        /*
-
-        chama o método doFilter do objeto FilterChain para continuar a execução da cadeia de filtros.
-        Isso garante que a requisição continue sendo processada pelos outros filtros na cadeia ou pelo manipulador do servlet final,
-        permitindo que a lógica da aplicação seja executada.
-
-         */
-
-        filterChain.doFilter(request, response);
     }
 
     private String getToken(HttpServletRequest request) {
-
-        if (request.getHeader("Authorization") != null){
-            return request
-                    .getHeader("Authorization")
-                    .replace("Bearer ", "");
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.replace("Bearer ", "");
         }
         return null;
+    }
+
+    private void handleException(HttpServletResponse response, int status, String message, String code, Exception exception)
+            throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        String jsonError = """
+            {
+                "errors": [
+                    {
+                        "message": "%s",
+                        "extensions": {
+                            "code": "%s"
+                        }
+                    }
+                ]
+            }
+        """.formatted(message, code);
+
+        response.getWriter().write(jsonError);
     }
 }

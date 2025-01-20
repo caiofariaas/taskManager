@@ -8,6 +8,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fariasvision.TaskManager.entities.Usuario;
 import com.fariasvision.TaskManager.infra.exceptions.usuario.InvalidTokenException;
+import graphql.GraphqlErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class TokenService {
         }
     }
 
-    public String getSubject(String tokenJWT) throws JWTCreationException, JWTDecodeException, InvalidTokenException{
+    public String getSubject(String tokenJWT) throws JWTCreationException, JWTDecodeException{
 
         try {
             return JWT
@@ -56,7 +57,7 @@ public class TokenService {
                     .getSubject();
         }
         catch (JWTDecodeException e){
-            throw new InvalidTokenException("Token Inválido!");
+            throw new InvalidTokenException("Token Inválido!", e);
         }
         catch (TokenExpiredException e ){
             throw new TokenExpiredException("Token Expirado!", e.getExpiredOn());

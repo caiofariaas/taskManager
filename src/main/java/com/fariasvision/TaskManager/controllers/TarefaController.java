@@ -2,7 +2,6 @@ package com.fariasvision.TaskManager.controllers;
 
 import com.fariasvision.TaskManager.dtos.TarefaResponse;
 import com.fariasvision.TaskManager.dtos.TarefaInput;
-import com.fariasvision.TaskManager.entities.Tarefa;
 import com.fariasvision.TaskManager.services.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +10,9 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Controller
 @Slf4j
